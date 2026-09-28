@@ -23,6 +23,16 @@ and posting structurally out of scope.
 npm install @start-x-work/mos-kit
 ```
 
+## 関連 OSS / Marketing-OS OSS line
+
+これらのツールキットが `mos-kit` を基盤に使っています:
+
+- [marketing-os-seo](https://github.com/start-x-work/marketing-os-seo) — SEO (LLMO/AEO) · `npx @start-x-work/mos-seo`
+- [marketing-os-ads](https://github.com/start-x-work/marketing-os-ads) — Ads · `npx @start-x-work/mos-ads`
+- [marketing-os-social](https://github.com/start-x-work/marketing-os-social) — Social · `npx @start-x-work/mos-social`
+
+同じ OSS ライン: [mos-video](https://github.com/start-x-work/mos-video)（SNS動画の内製パイプライン）・[mos-creative](https://github.com/start-x-work/mos-creative)（クリエイティブ制作支援）・[manifesto](https://github.com/start-x-work/manifesto)（思想・境界線）。
+
 ## License
 
 Apache-2.0
