@@ -1,0 +1,40 @@
+name: Release (npm publish)
+
+# main の package.json の version を npm に公開する。
+# 使い方：Actions → Release (npm publish) → Run workflow（Branch は main のまま）。
+# 前提：リポジトリか組織の Secrets に NPM_TOKEN（npm の Automation / Granular トークン）があること。
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # npm の provenance（どのコミットから作ったかの証明）に使う
+
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: "https://registry.npmjs.org"
+      - run: npm ci
+      - name: Stop if this version is already on npm
+        run: |
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "::error::$NAME@$VERSION is already published. Bump the version in package.json first."
+            exit 1
+          fi
+          echo "Publishing $NAME@$VERSION"
+      - run: npm run lint
+      - run: npm run build
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
