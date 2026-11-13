@@ -1,0 +1,348 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "type": "string",
+      "const": "decision-record/v1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "\\S",
+      "title": "ID"
+    },
+    "written_on": {
+      "type": "string",
+      "format": "date",
+      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+      "title": "書いた日"
+    },
+    "decided_by": {
+      "type": "string",
+      "pattern": "\\S",
+      "title": "決めた人"
+    },
+    "decision": {
+      "type": "string",
+      "pattern": "\\S",
+      "title": "判断"
+    },
+    "rollback": {
+      "type": "string",
+      "pattern": "\\S",
+      "title": "戻し方"
+    },
+    "premises": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "\\S",
+        "title": "状況の前提"
+      },
+      "title": "状況の前提"
+    },
+    "definitions": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "metric": {
+            "type": "string",
+            "pattern": "\\S",
+            "title": "指標"
+          },
+          "definition": {
+            "type": "string",
+            "pattern": "\\S",
+            "title": "定義"
+          },
+          "source": {
+            "type": "string",
+            "pattern": "\\S",
+            "title": "出典"
+          }
+        },
+        "required": ["metric", "definition", "source"],
+        "additionalProperties": false,
+        "title": "数字の定義"
+      },
+      "title": "数字の定義"
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "metric": {
+          "type": "string",
+          "pattern": "\\S",
+          "title": "指標"
+        },
+        "direction": {
+          "type": "string",
+          "enum": ["up", "down"],
+          "title": "向き",
+          "description": "up=上げる, down=下げる"
+        },
+        "baseline": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "undisclosed": {
+                  "type": "boolean",
+                  "const": true
+                }
+              },
+              "required": ["undisclosed"],
+              "additionalProperties": false,
+              "title": "非公開"
+            }
+          ],
+          "title": "いまの値"
+        },
+        "interval": {
+          "type": "object",
+          "properties": {
+            "low": {
+              "type": "number",
+              "title": "幅の下限"
+            },
+            "high": {
+              "type": "number",
+              "title": "幅の上限"
+            }
+          },
+          "required": ["low", "high"],
+          "additionalProperties": false,
+          "title": "予測の幅"
+        },
+        "unit": {
+          "type": "string",
+          "pattern": "\\S",
+          "title": "単位"
+        }
+      },
+      "required": ["metric", "direction", "baseline", "interval", "unit"],
+      "additionalProperties": false,
+      "title": "上げたい数字"
+    },
+    "guard": {
+      "type": "object",
+      "properties": {
+        "metric": {
+          "type": "string",
+          "pattern": "\\S",
+          "title": "指標"
+        },
+        "comparator": {
+          "type": "string",
+          "enum": [">=", "<="],
+          "title": "比べ方"
+        },
+        "threshold": {
+          "type": "number",
+          "title": "しきい値"
+        },
+        "unit": {
+          "type": "string",
+          "pattern": "\\S",
+          "title": "単位"
+        }
+      },
+      "required": ["metric", "comparator", "threshold", "unit"],
+      "additionalProperties": false,
+      "title": "守る数字"
+    },
+    "confidence": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["high", "medium", "low"],
+          "title": "確度の段階",
+          "description": "high=高, medium=中, low=低"
+        },
+        "reason": {
+          "type": "string",
+          "pattern": "\\S",
+          "title": "確度の理由"
+        }
+      },
+      "required": ["level", "reason"],
+      "additionalProperties": false,
+      "title": "確度"
+    },
+    "review": {
+      "type": "object",
+      "properties": {
+        "due_on": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+          "title": "期日"
+        },
+        "compare_with": {
+          "type": "string",
+          "pattern": "\\S",
+          "title": "比べるもの"
+        }
+      },
+      "required": ["due_on", "compare_with"],
+      "additionalProperties": false,
+      "title": "期日と比べるもの"
+    },
+    "outcome": {
+      "type": "object",
+      "properties": {
+        "reviewed_on": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+          "title": "照合した日"
+        },
+        "actuals": {
+          "type": "object",
+          "properties": {
+            "target": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "undisclosed": {
+                      "type": "boolean",
+                      "const": true
+                    }
+                  },
+                  "required": ["undisclosed"],
+                  "additionalProperties": false,
+                  "title": "非公開"
+                }
+              ],
+              "title": "上げたい数字の実績"
+            },
+            "guard": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "undisclosed": {
+                      "type": "boolean",
+                      "const": true
+                    }
+                  },
+                  "required": ["undisclosed"],
+                  "additionalProperties": false,
+                  "title": "非公開"
+                }
+              ],
+              "title": "守る数字の実績"
+            }
+          },
+          "required": ["target", "guard"],
+          "additionalProperties": false,
+          "title": "実際の数字"
+        },
+        "definition_changed": {
+          "type": "boolean",
+          "title": "定義が途中で変わったか"
+        },
+        "verdict": {
+          "type": "string",
+          "enum": ["as_expected", "partial_miss", "miss", "undetermined"],
+          "title": "結果",
+          "description": "as_expected=期待通り, partial_miss=一部外れ, miss=外れ, undetermined=判定できない"
+        },
+        "verdict_by": {
+          "type": "string",
+          "enum": ["rule", "person"],
+          "title": "判定した人",
+          "description": "rule=規則, person=人"
+        },
+        "rule_verdict": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": ["as_expected", "partial_miss", "miss", "undetermined"],
+              "title": "結果",
+              "description": "as_expected=期待通り, partial_miss=一部外れ, miss=外れ, undetermined=判定できない"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "規則の判定"
+        },
+        "override_reason": {
+          "type": "string",
+          "pattern": "\\S",
+          "title": "規則と違う判定にした理由"
+        },
+        "interval_position": {
+          "anyOf": [
+            {
+              "type": "string",
+              "enum": ["below", "inside", "above"]
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "title": "幅のどこに入ったか"
+        },
+        "broken_premises": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "\\S",
+            "title": "ずれた前提"
+          },
+          "title": "ずれた前提"
+        },
+        "next_decision": {
+          "type": "string",
+          "pattern": "\\S",
+          "title": "次の判断"
+        }
+      },
+      "required": [
+        "reviewed_on",
+        "actuals",
+        "definition_changed",
+        "verdict",
+        "verdict_by",
+        "rule_verdict",
+        "interval_position",
+        "broken_premises",
+        "next_decision"
+      ],
+      "additionalProperties": false,
+      "title": "照合"
+    }
+  },
+  "required": [
+    "schema",
+    "id",
+    "written_on",
+    "decided_by",
+    "decision",
+    "premises",
+    "definitions",
+    "target",
+    "guard",
+    "confidence",
+    "review"
+  ],
+  "additionalProperties": false,
+  "title": "判断の照合の記録",
+  "description": "decision-record/v1。判定は案で、決めるのは人。記録だけで、外部の媒体は操作しない。"
+}

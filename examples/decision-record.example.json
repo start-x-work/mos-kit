@@ -1,0 +1,56 @@
+{
+  "schema": "decision-record/v1",
+  "id": "example-0001",
+  "written_on": "2026-12-01",
+  "decided_by": "（見本）マーケティング担当",
+  "decision": "（見本）問い合わせページの案内文を A 案から B 案へ切り替える。対象は問い合わせページだけで、12月1日から。",
+  "rollback": "（見本）案内文を A 案に差し替えれば戻せる",
+  "premises": [
+    "（見本）問い合わせページへの訪問数は、ここ3か月ほぼ横ばい",
+    "（見本）期間中に料金や商品の変更はない"
+  ],
+  "definitions": [
+    {
+      "metric": "（見本）月の問い合わせ数",
+      "definition": "（見本）問い合わせフォームの送信が完了した件数。同じ人の重複は除く",
+      "source": "（見本）フォームの送信記録"
+    },
+    {
+      "metric": "（見本）問い合わせ1件あたりの費用",
+      "definition": "（見本）その月の広告費 ÷ 月の問い合わせ数",
+      "source": "（見本）広告の請求額とフォームの送信記録"
+    }
+  ],
+  "target": {
+    "metric": "（見本）月の問い合わせ数",
+    "direction": "up",
+    "baseline": 40,
+    "interval": { "low": 44, "high": 52 },
+    "unit": "件"
+  },
+  "guard": {
+    "metric": "（見本）問い合わせ1件あたりの費用",
+    "comparator": "<=",
+    "threshold": 12000,
+    "unit": "円"
+  },
+  "confidence": {
+    "level": "medium",
+    "reason": "（見本）似た変更の前例はあるが、同じページでは初めて"
+  },
+  "review": {
+    "due_on": "2026-12-29",
+    "compare_with": "（見本）切り替え前の4週間の同じ数字"
+  },
+  "outcome": {
+    "reviewed_on": "2026-12-29",
+    "actuals": { "target": 47, "guard": 11500 },
+    "definition_changed": false,
+    "verdict": "as_expected",
+    "verdict_by": "person",
+    "rule_verdict": "as_expected",
+    "interval_position": "inside",
+    "broken_premises": [],
+    "next_decision": "続ける"
+  }
+}
