@@ -1,6 +1,6 @@
 {
   "name": "@start-x-work/mos-kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": false,
   "type": "module",
   "license": "Apache-2.0",
@@ -21,21 +21,25 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
-    }
+    },
+    "./schema/decision-record.v1.json": "./schema/decision-record.v1.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "schema"
   ],
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --clean",
     "lint": "biome check .",
     "format": "biome format --write .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "schema:build": "npm run build && node scripts/build-schema.mjs && biome format --write schema"
   },
   "dependencies": {
     "@google/genai": "^2.6.0",
-    "cheerio": "^1.2.0"
+    "cheerio": "^1.2.0",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.15",

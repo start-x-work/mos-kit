@@ -10,6 +10,7 @@ Shared foundation for Marketing-OS OSS toolkits.
 - **Output** — `render(result, format)` for json/table/markdown strings
 - **Read-only platform base** — `ReadOnlyPlatform` without write methods
 - **Commercial hint** — `COMMERCIAL_HINT` for optional OSS → commercial links
+- **Decision record** — `DecisionRecordSchema`, `judge`, `renderDecisionCard` for checking a decision against its outcome (`decision-record/v1`, [docs](docs/decision-record.md))
 
 ## Design constraints
 
